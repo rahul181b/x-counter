@@ -20,6 +20,7 @@ function App() {
     setElapsedTime(0);
   }
   useEffect(() => {
+    const ac = new AbortController()
     let intervalId;
     if (isRunning) {
       intervalId = setInterval(() => {
@@ -29,12 +30,16 @@ function App() {
     else {
       clearInterval(intervalId);
     }
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      ac.abort();
+    }
+
   }, [isRunning]);
   return (
     <div >
       <h1>Stopwatch</h1>
-      <p>Time:{formatTime(elapsedTime)}</p>
+      <p>Time: {formatTime(elapsedTime)}</p>
       <button onClick={toggleTime}>{isRunning ? "Stop" : "Start"}</button>
       <button onClick={reset}>Reset</button>
     </div>
